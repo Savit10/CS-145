@@ -1,0 +1,24 @@
+#lang racket
+(require "cpu.rkt")
+(require "RAM.rkt")
+
+(define accum
+  '(
+    9     ; [0]: first instruction
+    1     ; [1]: literal 1
+    2     ; [2]: literal 2
+    8     ; [3]: literal 8
+    0     ; [4]: n
+    0     ; [5]: acc
+    0     ; [6]: length of the list
+    0     ; [7]: count of what element is being checked
+    0     ; [8]: index to which inserting element
+    8     ; [9]: number of constants
+    80400 ; [10] input n into [4]
+    40004 ; [11] skip next if n = 0
+    10001 ; [12] skip next instruction
+    90000 ; [13] halt
+    10504 ; [14] acc = acc + n 
+    40006 ; [15]: add1 to counter if length = 0
+    10806
+     ))

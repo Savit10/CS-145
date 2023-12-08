@@ -1,0 +1,8 @@
+#lang racket
+
+(lambda (self x)
+   (((x (lambda (yes) (lambda (no) (lambda (yes) (lambda (no) no)))))
+       (lambda (selector) ((selector (lambda (yes) (lambda (no) yes))) (lambda (x) (lambda (yes) (lambda (no) yes))))))
+       (((x (lambda (yes) (lambda (no) yes)))
+           (lambda (selector) ((selector (lambda (yes) (lambda (no) no))) (self (x (lambda (yes) (lambda (no) no)))))))
+           (lambda (selector) ((selector (lambda (yes) (lambda (no) yes))) (x (lambda (yes) (lambda (no) no))))))))

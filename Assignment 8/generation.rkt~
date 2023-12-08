@@ -1,0 +1,39 @@
+#lang racket
+(require "generate.rkt")
+
+(provide prime?)
+(provide my-build-list)
+(provide my-insert) 
+
+(define (generate first done? step final)
+    (if (done? first) (final first) (generate (step first) done? step final)))
+
+(define (prime? n)
+  (generate (list (inexact->exact(floor(sqrt n))) 2)
+            (lambda (x) (or (<= n 3) (= (first x) (second x)) (= (modulo n (second x)) 0)))
+            (lambda (x) (list n (first x) (add1 (second x))))
+            (lambda (x)
+              (cond
+                [(= n 1) #f]
+                [(or (= n 2) (= n 3)) #t]
+                [(= n (second x)) #t]
+                [(and (= (modulo n (second x)) 0) (not (= n (second x)))) #f]
+                [else #t]))))
+
+(define (my-build-list n f)
+  (generate (list (- n 1) (f (- n 1)))
+            (lambda (x) (= (first x) 0))
+            (lambda (x) (cons (sub1 (first x)) (cons (f (sub1 (first x))) (rest x))))
+            (lambda (x) (rest x)))) 
+
+(define (my-insert e l T)
+  (generate (list empty l)
+            (lambda (x) (or (empty? (second x)) (T e (first (second x)))))
+            (lambda (x) (list (cons (first (second x)) (first x)) (rest (second x))))
+            (lambda (x) (append (reverse (first x)) (cons e (second x))))))
+
+(define (my-insertion-sort l T)
+  (generate (list (list(first l)) (rest l))
+            (lambda (x) (empty? (second x)))
+            (lambda (x) (list (my-insert (first (second x)) (first x) T) (rest (second x))))
+            (lambda (x) (first x))))

@@ -1,0 +1,23 @@
+#lang lazy
+(require “Lambda.rkt”)
+
+(define (MUL a b)
+  (mul-helper (Car (cmp a b a b)) (Cdr (cmp a b a b)) Empty)
+)
+(define (cmp a b res1 res2)
+  (If (Z? a) (Cons res1 res2)
+      (If (Z? b) (Cons res2 res1)
+          (cmp (Cdr a) (Cdr b) res1 res2)))
+)
+(define (Create c b)
+  (If (Z? c) b
+      (Create (Cdr c) (Cons False b)))
+)
+
+(define (mul-helper a b c)
+  (If (Z? a) Empty
+      (If (Car a)
+          (ADD (Create c b) (mul-helper (Cdr a) b (Cons False c)))
+          (mul-helper (Cdr a) b (Cons False c)))))
+
+(TAN (MUL (NAT 16) (NAT 16)))

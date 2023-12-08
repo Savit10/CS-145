@@ -1,0 +1,17 @@
+#lang lazy
+(require "Lambda.rkt")
+(define (MUL a b)
+  (MUL-helper a b Z Z))
+
+(define (MUL-helper a b acc counter)
+  (If (Z? a) Z
+    (If (Z? b) acc
+        (If (Car b)
+            (MUL-helper a (Cdr b) (ADD (counter-helper a counter) acc) (Cons False counter))
+            (MUL-helper a (Cdr b) acc (Cons False counter))))))
+
+(define (counter-helper a counter)
+  (if (Z? counter) a
+      (counter-helper (Cons False a) (Cdr counter))))
+
+(TAN (MUL (NAT 16) (NAT 20)))

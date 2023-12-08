@@ -1,0 +1,128 @@
+#lang racket
+
+
+
+(require "generate.rkt")
+
+
+; merge sort implementation (non-tail recursive) from a5f -- maybe useful?
+
+;(define (merge-sort lst)
+;  (cond
+;    ((or (empty? lst) (empty? (cdr lst))) lst)
+;    ((and (> (first lst) (second lst)) (= (length lst) 2)) (list (second lst) (first lst)))
+;    (true (merge (merge-sort (take lst (floor (/ (length lst) 2)))) (merge-sort (drop lst (floor (/ (length lst) 2))))))))
+;
+;(define (merge left right)
+;  (cond
+;    [(empty? left) right]
+;    [(empty? right) left]
+;    [(<= (car left) (car right))
+;     (cons (car left) (merge (cdr left) right))]
+;    [else
+;     (cons (car right) (merge left (cdr right)))]))
+
+
+; make a helper func for merge, with the main func being the mergesort/splitter func -- I think this works
+
+; logic  for tail-recursive mergesort
+; tail recursive version (what you did in class) -- implementation for this is more complex
+
+; logic: bottom-up merge sort
+; treat each element as an individual list
+; recombine the elements into bigger lists in pairs
+; recombine each pair in a totally ordered manner.
+
+
+; USE REVERSE ONCE, DONT USE APPEND (I think, according to what people on discord have said)
+
+;(provide my-sort)
+
+
+; use a reverse in the finalize maybe
+
+
+; in the mergesort method, turn the list into a bunch of singletons
+
+(define (my-sort lst T)
+  (generate
+   (list T empty lst (length lst) 0) ; initialization
+   (lambda(x) (= (fourth x) (fifth x))) ; done?
+   (lambda(x) (list T (cons (list (car (third x))) (second x)) (cdr (third x)) (fourth x) (add1 (fifth x)))) ;  step func
+
+   ;(lambda(x) (second x))
+   (lambda(x) (reverse (merge-helper1 (second x) (fourth x) T 0))) ; reverses the list that gets outputted because we bult it using cons...
+   ))
+
+; third fourth of x are both empty
+
+; repeatedly call merge-helper 2 on each pair until the full list is merged
+; this isn't working
+(define (merge-helper3 lst T)
+  (generate
+   (list lst empty)
+   (λ(x) (empty? (first x)))
+
+   ; if we have heavy innefficiency, it's here
+   (λ(x) (cond
+           ((empty? (cdr (list (first x)))) (list empty (merge-helper2 (car (first x)) (second x) T)))
+           (true (list (cdr (first x)) (merge-helper2 (car (first x)) (second x) T))))
+     (λ(x) (second x))
+     )))
+; count, where oount
+
+
+; merges two lists in an ordered manner
+(define (merge-helper2 a b T)
+  (generate
+   (list a b empty)
+   (λ(x) (and (empty? (first x))(empty? (second x))))
+   (λ(x) (cond
+           ((empty? (first x)) (list empty (cdr (second x)) (cons  (car (second x)) (third x))))
+           ((empty? (second x)) (list (cdr (first x)) empty (cons (car (first x)) (third x) )))
+
+           ((T (car (first x)) (car (second x))) (list (cdr (first x)) (second x) (cons (car (first x)) (third x) )))
+           (true (list (first x) (cdr (second x)) (cons (car (second x)) (third x))))))
+   (λ(x) (third x))
+   ))
+
+
+
+; turns the elements into ordered pairs
+(define (merge-helper1 lst listlength T count)
+  (generate
+   (list lst empty count)
+   (lambda(x) (= listlength (third x)))
+   (lambda (x) (cond
+                 ; idea for step func
+                 ; 
+                 ((empty? (first x)) (list (first x) (second x) (third x)))
+                 ((empty? (cdr (first x))) (list (cdr (first x)) (cons (car (first x)) (second x)) (add1 (third x)))) ; return car of first of x
+                 
+                 (true (if (T (car (first (first x))) (car (second (first x))))
+                           (list (cdr (cdr (first x))) (cons (list (car (first (first x))) (car (second (first x)))) (second x)) (+ 2 (third x)))
+                           (list (cdr (cdr (first x))) (cons (list (car (second (first x))) (car (first (first x)))) (second x)) (+ 2 (third x)))))
+                 
+                 ))
+   ;(λ(x) (merge-helper3 (second x) T))
+   (λ(x) (merge-helper2 (first (second x)) (second (second x)) T)) ; finalize
+   ))
+
+(my-sort '(6 5 2 4 3 1) <)
+
+; ok so it merges it once
+
+
+; now let's make another helper func to:
+; recombine each pair in a totally ordered manner - mergehelper2
+
+; input 2 lists
+; recombine in the generative function way
+
+; (list a b empty)
+; add checks for whether a or b are empty
+; if (car a) < (car b) ==> return (list (cdr a) b (cons (third x) (list (car a)))
+; else (list a (cdr b) (cons (third x) (list (car b)))
+
+
+

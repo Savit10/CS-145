@@ -1,0 +1,6 @@
+#lang racket
+
+(require "scratchandwin.rkt")
+(require "prize.rkt")
+
+(define (collect-prize cardlist

@@ -1,0 +1,22 @@
+#lang racket
+
+(require "stream.rkt")
+(require "ordered-set.rkt")
+(require "total-order.rkt")
+
+(define (scoreboard stream)
+  (stream-generate
+   (list s empty)
+   (lambda (x) (stream-empty? (car x)))
+   (lambda (x) (list (stream-cdr (second x)) (os-union (second x) (os-singleton (to-hide  )))
+   (lambda (x) (list (stream-car (car x)) 
+
+
+(define (count s)
+  (stream-generate 
+   (list s empty)
+   (lambda (x) (stream-empty? (car x)))
+   (lambda (x) (list (stream-cdr (car x)) (os-union (second x) (os-singleton (to-hide (first (max-count-pair (stream-car (car x)) (second x))) (+ 1(second (max-count-pair (stream-car (car x)) (second x)))))))))
+   (lambda (x) (to-unhide (os-before (os-union (car x) (os-singleton (to-hide (stream-car (car x)) 0))) (to-hide (+ 1 (stream-car (car x))) 0))))))
+                     
+    

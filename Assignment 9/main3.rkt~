@@ -1,0 +1,24 @@
+#lang racket
+
+(require "ordered-set.rkt")
+(require "total-order.rkt")
+(require "stream.rkt")
+
+(define (count s)
+  (count-helper (os-empty) s))
+
+(define (count-helper set s)
+  (stream-generate s 
+                   (λ(x) (stream-empty? x))
+                   (λ(x) (stream-cdr x))
+                   (λ(x) (let* ([current-element (stream-car x)]
+                                [updated-set (os-union set (os-singleton (to-rep current-element)))])
+                           (occurrence-finder updated-set current-element)))))
+
+(define (occurrence-finder s n)
+  (occurrence-finder-helper s n 0))
+
+(define (occurrence-finder-helper s n counter)
+  (cond
+    [(or (empty? s) (not (os-member s (to-rep n)))) (list n counter)]
+    [else (occurrence-finder-helper (os-difference s (os-singleton (to-rep n))) n (add1 counter))]))

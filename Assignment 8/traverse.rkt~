@@ -1,0 +1,32 @@
+#lang racket
+
+
+(require "btree.rkt")
+(provide traverse)
+
+(define (bst->list t)
+  (in-order t '()))
+
+(define (in-order t acc)
+  (if (empty? t) acc
+      (in-order (node-left t) (cons (node-key t) (in-order (node-right t) acc)))))
+
+(define (traverse t)
+  (generate
+   (list t empty)
+   (lambda (x) (empty? (first x)))
+   (lambda (x) (list (bt-left (first x)) (cons (bt-dec (first x)) (bt-right (first x)))))
+   (lambda (x) (second x))))
+
+
+
+
+
+
+
+
+
+
+
+
+
