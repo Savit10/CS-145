@@ -1,0 +1,1 @@
+("8.11.1" ta6osx ("679aa8d421402a1394183effe1b00a3fc78a0741" . "1794e39a700f4d4af6ceb5aeb7013c30bcb0cfdf") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"lazy" #"lang" #"reader.rkt") (collects #"lazy" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

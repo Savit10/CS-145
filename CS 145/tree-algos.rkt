@@ -1,0 +1,88 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname tree-algos) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+
+; Struct Definition
+(define-struct node (left key right))
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+; Height of a Tree
+(define (height t)
+  (cond
+    [(empty? t) 0]
+    [else (+ 1 (max (height (node-left t)) (height (node-right t))))])) 
+                  
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+; Size of a tree (number of elements in a tree)
+(define (size t)
+  (cond
+    [(empty? t) 0]
+    [else (+ 1 (size (node-left t)) (size (node-right t)))]))
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+; Inserting an element into a BST
+(define (insert t e)
+  (cond
+    [(empty? t) (make-node empty e empty)]
+    [(< e (node-key t)) (make-node (insert (node-left t) e) (node-key t) (node-right t))]
+    [(> e (node-key t)) (make-node (node-left t) (node-key t) (insert (node-right t) e))]
+    [else t]))
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+; Deleting an element from a BST
+(define (delete t e)
+  (cond
+    [(empty? t) t]
+    [(< e (node-key t)) (make-node (delete (node-left t) e) (node-key t) (node-right t))]
+    [(> e (node-key t)) (make-node (node-left t) (node-key t) (delete (node-right t) e))]
+    [else
+      (cond
+        [(and (empty? (node-left t)) (empty? (node-right t))) empty]
+        [(empty? (node-left t)) (node-right t)]
+        [(empty? (node-right t)) (node-left t)]
+        [else (make-node (node-left t) (node-key (min-node (node-right t))) (delete (node-right t) (node-key (min-node (node-right t)))))])]))
+
+(define (min-node t)
+  (cond
+    [(empty? t) empty]
+    [(empty? (node-left t)) t]
+    [else (min-node (node-left t))]))
+
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(define (find-max-less t e)
+  (find-max-less-helper t e empty))
+
+(define (find-max-less-helper t e previous)
+  (cond
+    [(empty? t) empty]
+    [(<= e (node-key t)) (if (empty? (node-left t)) previous (find-max-less-helper (node-left t) e previous))]
+    [true (if (empty? (node-right t)) (node-key t) (find-max-less-helper (node-right t) e  (node-key t)))]))
+;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(define (bigtree n)
+  (btree-helper n empty))
+
+(define (btree-helper n t)
+  (cond
+    [(= n 0) t]
+    [else (btree-helper (sub1 n) (insert t (random 1000000)))]))
+
+(define (bigtree2 n)
+   (if (zero? n) empty (insert (bigtree (sub1 n))(random 1000000))))
+;; Testing
+                      
+(define tree (make-node (make-node (make-node empty 0 empty) 2 (make-node empty 3 empty)) 4 (make-node (make-node empty 5 empty) 6 (make-node empty 7 empty))))
+(size tree)
+(height tree)
+
+(insert tree 9)
+(insert tree 29)
+(insert tree 1)
+
+(delete tree 3)
+(delete tree 2)
+(delete tree 4)
+
+(find-max-less tree 2)
+(find-max-less tree 3)
+(find-max-less tree 6)
+(find-max-less tree 7)

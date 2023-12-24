@@ -1,0 +1,26 @@
+#lang racket
+(require "generate.rkt")
+(require "btree.rkt")
+(define (split t)
+  (generate
+   (list t false)
+   (lambda (x) (second x))
+   (lambda (x) (list (list (bt-left (car x)) (make-bt empty (bt-dec (car x)) empty) (bt-right (car x))) true));Returns the left subtree, root node, right subtree
+   (lambda (x) (car x))
+   )
+  )
+
+(define (traverse t)
+  (generate
+   (list (list t) empty)
+   (lambda(x) (empty? (car x)))
+   (lambda(x)
+     (cond
+       [(not (empty? (first (car x))))
+        (if (and (empty? (bt-left (first (car x)))) (empty? (bt-right (first (car x)))))
+            (list (cdr (first x)) (append (second x) (list (bt-dec (first (car x)))) ))
+            (list (append (split (first (car x))) (cdr (car x))) (second x)))]
+       [else (list (cdr (first x)) (second x))]))
+   (lambda(x) (second x))
+     )
+   )

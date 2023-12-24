@@ -1,0 +1,19 @@
+#lang racket
+(require "stream.rkt")
+(require "total-order.rkt")
+(require "ordered-set.rkt")
+
+(define (count s)
+  (stream-generate 
+   (list s os-empty)
+   (lambda (x) (stream-empty? (first x)))
+   (lambda (x) (list (stream-cdr (first x)) (os-union (second x) (os-singleton (to-hide (first (max-tuple (stream-car (first x)) (second x))) (add1 (second (max-tuple (stream-car (first x)) (second x)))))))))
+   (lambda (x) (max-tuple (stream-car (first x)) (second x)))
+  )
+)
+ 
+
+(define (max-tuple number set)
+  (to-unhide (os-before (os-union set (os-singleton (to-hide number 0))) (to-hide (add1 number) 0))))
+
+;(stream->list (count (list->stream (list 3 9 3 4 9 3 7))))

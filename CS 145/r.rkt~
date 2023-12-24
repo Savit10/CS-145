@@ -1,0 +1,5 @@
+#lang scheme
+( define ( pow b n )
+    ( if ( zero ? n ) 1
+    ( if ( odd ? n ) (* b ( pow b ( sub1 n ) ) )
+         ( helper-pow ( pow b ( quotient n 2) ) ) ) ) )

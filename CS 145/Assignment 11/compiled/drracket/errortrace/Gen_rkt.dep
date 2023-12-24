@@ -1,0 +1,1 @@
+("8.11.1" ta6osx ("6eade677d1691cd6b54b9655aa06c91de57890eb" . "74fd6f38ec05eae8f57213ac2292a521d51d3bb9") #"/Users/savit/Desktop/Desktop/University/CS 145/Assignment 11/IOStream.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"lazy" #"lang" #"reader.rkt") (collects #"lazy" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

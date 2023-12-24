@@ -1,0 +1,16 @@
+#lang lazy
+
+(require "IOStream.rkt")
+(require "Gen.rkt")
+
+(define Nats (build-list (lambda (x) x) values))
+
+(define (Kill k s) (filter (not (zero? (modulo (car s) k))) s))
+
+(define primes (filter prime? Nats))
+
+(define (prime? n)
+  (generate (list (floor (sqrt n)) n) 
+            (lambda(x) (or (= n 1) (= n 0) (integer? (/ (second x) (first x)))))
+            (lambda(x) (list (sub1 (first x)) (cadr x)))
+            (lambda(x) (and (not (or (= n 0) (= n 1))) (= (first x) 1)))))

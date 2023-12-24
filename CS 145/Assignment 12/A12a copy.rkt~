@@ -1,0 +1,25 @@
+#lang racket
+
+(require "RAM.rkt")
+(define (Gen inp state step)
+  (define inphead (if (empty? inp) empty (take inp 1)))
+  (define inprest (if (empty? inp) empty (cdr inp)))
+  (define (cont newinp state out)
+     (if (or (eq? newinp inphead)(eq? newinp (cdr inphead)))
+         (append out (Gen (append newinp inprest) state step))
+         'fail))
+  (step inphead state cont))
+
+(define (step inp state cont)
+    (cond
+        [(empty? inp) empty]
+        [(= 0 (ram-fetch state 1)) (cont (cdr inp) (ram-store (ram-store (ram-store (ram-store state 3 (car inp)) 0 (car inp)) 1 1) 2 1) (list (car inp)))]
+        [(not (= (car inp) (ram-fetch state (+ 2 (ram-fetch state 2)))))
+         (if (= 0 (ram-fetch state 2))
+             (cont (cdr inp)
+ (ram-store (ram-store (ram-store (ram-store state (+ 3 (ram-fetch state 1)) (car inp)) 1 (+ 1 (ram-fetch state 1))) 2 (ram-fetch state 1)) 0 (+ (ram-fetch state 0) (car inp))) (list (+ (ram-fetch state 0) (car inp))))
+             (cont inp (ram-store state 2 (max (sub1 (ram-fetch state 2)) 0)) empty))]  
+        [else (cont (cdr inp) (ram-store state 2 (ram-fetch state 1)) (list (ram-fetch state 0)))]))
+
+(define start (ram-store (ram-store (ram-store ram 0 0) 1 0) 2 0))
+

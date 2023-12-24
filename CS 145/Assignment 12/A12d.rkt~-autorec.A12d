@@ -1,0 +1,21 @@
+#lang racket
+(require "CPU.rkt")
+(require "RAM.rkt")
+
+(define accum (list
+     0 ;   [0]: first instruction
+     1   ; [1]: 1
+     2   ; [2]: 2
+     6   ; [3]: 6
+     0   ; [4]: n
+     0   ; [5]: acc
+     80400 ; input n
+     10201 ; acc = acc + n
+     40004 ; skip next if n = 0
+     10002 ; skip next 2 instructions
+     70005 ; out acc
+     90000 ; halt
+     20003 ; go back 6 from next instr
+     ))
+
+(core-dump (cpu (ram-load ram 0 accum) 0))

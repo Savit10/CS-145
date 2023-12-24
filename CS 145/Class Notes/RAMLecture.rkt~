@@ -1,0 +1,17 @@
+#lang racket
+
+#|
+Random Access Memory/Model/Machine
+- Model of Computation (like Lambda Calculus, Turing Machine...)
+- Two aspects: Racket and Physical (Electronic)
+
+Random Access Memory - An Abstract Data Type
+Operations:
+      Create New RAM
+RAM<- RAM-Store[RAM, Address(non-negative integer), Value(non-negative integer)]
+Value <- RAM-Fetch/Load [RAM, Address]
+
+RAM-Load[RAM, Address with no value] -> Will return an error
+RAM-Store[RAM, Address with already Existing Value, New Value] -> Will replace the existing value |#
+
+(require "RAM.rkt")

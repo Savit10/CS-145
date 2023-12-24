@@ -1,0 +1,43 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname introToRecursion) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+; sum integers from 1 to 10
+
+
+(define sumTo9 (+ 1 2 3 4 5 6 7 8 9))
+(define sumTo10 (+ sumTo9 10)) ; recursion
+(define sumTo5 (+ 1 2 3 4 5))
+(define sumTo6 (+ sumTo5 6))
+
+; sum integers from 1 to n
+
+(define (sumTo N)
+  (if (< N 1) 0 (+ (sumTo(- N 1)) N))
+  ) ; recursion
+
+(sumTo 10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

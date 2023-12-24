@@ -1,0 +1,11 @@
+#lang lazy
+(require "Lambda.rkt")
+(define (MUL a b)
+  (MUL-helper a b False))
+
+(define (MUL-helper a b acc)
+  (cond
+    [(Z? a) Z]
+    [(Z? b) Z]
+    [else (MUL-helper (Cdr a) (Cdr b) (Cons (ADD (Car a) (Car b)) acc))]))
+  

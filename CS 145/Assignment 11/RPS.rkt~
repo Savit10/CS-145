@@ -1,0 +1,20 @@
+#lang lazy
+(require "IOStream.rkt")
+(require "Gen.rkt")
+
+(define (bart opponent-history)
+  (define (mymove other)
+    'rock)
+  (map mymove opponent-history))
+
+(define (lisa opponent-history) (rps-cheat (bart opponent-hidtory)))
+
+(define (maggie opponent-history)
+  (define (mymove other)
+    (rps-cheat opponent-history))
+  (map mymove opponent-history))
+
+(define (champion opponent-history)
+  (define (mymove other)
+    (rps-cheat opponent-history))
+  (map mymove opponent-history))

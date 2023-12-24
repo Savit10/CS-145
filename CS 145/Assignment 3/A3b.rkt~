@@ -1,0 +1,43 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname A3b) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(define-struct node (left right))
+                                   
+(define (tree-similar? a b)
+  (cond
+    ((and (empty? a) (empty? b)) true)
+    ((or (empty? a) (empty? b)) false)
+    (true (and (tree-similar? (node-left a) (node-left b)) (tree-similar? (node-right a) (node-right b))))))
+  
+(define (tree-create n)
+  (if (= n 0) '() (if (= n 1) (make-node empty empty) (make-node (tree-create (- n 1)) empty))))
+(define (tree-create-c n)
+  (if (= n 0) '() (if (= n 1) (make-node empty empty) (make-node empty (tree-create-c(- n 1))))))
+(define (tree-create-d n)
+  (if (= n 0) '() (if (= 0(modulo n 2)) (make-node empty (tree-create-d(- n 1))) (make-node (tree-create-d (- n 1)) empty))))
+
+(define (fac n m)
+  (if (= n 1) m
+      (fac (- n 1) (* n m))))
+     
+(define (tree-count n)
+  (cond
+    ((= n 0) 1)
+    (true (/ (fac (* 2 n) 1) (* (fac n 1) (fac (+ n 1) 1))))))
+
+
+#|(define (tree-grow-min tree)
+  (cond
+    ((empty? tree)(make-node empty empty))
+    ((empty? (node-left tree)) (make-node (make-node empty empty) empty))
+    ((empty? (node-right tree)) (make-node empty (make-node empty empty)))
+    ((< (count (node-left tree))  (count (node-right tree))) (make-node empty (tree-grow-min(node-left tree))))
+    (true (make-node (tree-grow-min(node-right tree)) empty)))) |#
+
+#| (define (tree-shrink-min tree)
+  (cond
+    ((empty? tree) tree)
+    ((equal? (make-node empty empty) tree) empty)
+    ((or (equal? (make-node (make-node empty empty) empty) tree) (equal? (make-node empty (make-node empty empty)) tree)) (make-node empty empty))
+    ((> (count (node-left tree)) (count(node-right tree))) (make-node empty (tree-grow-min(node-left tree))))
+    (true (make-node (tree-shrink-min(node-right tree)) empty)))) |#

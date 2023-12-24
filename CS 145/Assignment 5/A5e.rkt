@@ -1,0 +1,17 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname A5e) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(define-struct node (left right key))
+
+(define (insert-bst t n)
+  (cond
+    [(empty? t) (make-node empty empty n)]
+    [(< n (node-key t)) (make-node (insert-bst (node-left t) n) (node-right t)  (node-key t))]
+    [true (make-node (node-left t) (insert-bst (node-right t) n) (node-key t))]))
+
+(define (rand->bst 1st)
+  (list-sorted->balanced '() 1st))
+
+(define (list-sorted->balanced t 1st)
+  (if (empty? 1st) t
+      (list-sorted->balanced (insert-bst t (car 1st)) (cdr 1st))))

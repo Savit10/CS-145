@@ -1,0 +1,80 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname |BSTs (cont) and Lists|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(define-struct node (l k r))
+
+(define (buildO a b) ;building a bst with max-height on one side
+  (cond
+    [(< b a) empty]
+    [true (make-node
+           empty a (buildO (add1 a) b)
+           )]))
+
+(define (bins t e)
+  (cond
+    [(empty? t) (make-node empty e empty)]
+    [(< (node-k t) e) (bins (node-l t) e)]
+    [true (bins (node-r t) e)]))
+
+(define (build1 a b) ; building a bst with min-height (balanced BST)
+  (cond
+    [(< b a) empty]
+    [true (make-node
+           (build1 a (sub1 (quotient (+ a b) 2)))
+           (quotient (+ a b) 2)
+           (build1 (add1 (quotient (+ a b) 2)) b))]))
+
+(require racket/base) ; don't use this when submitting, use it to test the time the algorithm takes
+(time (node? (build1 1 1000000)))
+
+;build0 - always does 1 make-node, 1 recursive call size 1 smaller
+;build1 - always dodes 2 recursive calls, slightly less than 1/2 the size
+
+(define (build2 a b)
+  (cond
+    [(< b a) empty]
+    [else (bins (build2 (add1 a) b) a)]))
+
+(define (build3 a b)
+  (cond
+    [ (< b a) empty]
+    [true (bins (build3 a (sub1 b)) b)]))
+
+(define (tmember t e)
+  (cond
+    [(empty? t) false]
+    [(< e (node-k t)) (tmember (node-l t) e)]
+    [(< (node-k t) e) (tmember (node-r t) e)]
+    [true true]))
+
+; List (aka unary tree)
+; list is either empty or (e, l) where l is a list
+; (cons car cdr) -> non empty list: car is the element and cdr is the rest of the list
+; (cons 1 (cons 2 (cons 3 empty))) -> list
+
+(define L3 (cons 1 (cons 2  (cons 3 empty))))
+
+(first L3)
+(second L3)
+(list-ref L3 0)
+
+(cdr (cdr (cdr L3)))
+
+(define (count-list L)
+  (cond
+    [(empty? L) 0]
+    [true (add1 (count-list (cdr L)))]))
+
+(count-list L3)
+
+L3
+
+#|(define (drop-take 1st n)
+  (cond
+    [(or (empty? 1st) (<= n 1)) empty]
+    [(>= n (length 1st)) 1st]
+    [else (cons (car 1st) (drop-take (cdr 1st) (sub1 n)))]))
+
+(define (drop 1st n)
+  (if (> n (length 1st)) empty
+  (reverse (drop-take (reverse 1st) n))))|#
